@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/home/eny/Projects/webscraper/AILENV/bin/python
 # -*-coding:UTF-8 -*
 
 """
