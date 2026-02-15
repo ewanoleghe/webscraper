@@ -20,7 +20,7 @@ websockets>9.0
 crcmod
 mmh3>2.5
 # ssdeep>3.3
-pydeep2>=1.0                           # ssdeep bindings (was missing!)
+# pydeep2>=1.0                           # ssdeep bindings (was missing!)
 xxhash>3.1.0
 
 # ZMQ
