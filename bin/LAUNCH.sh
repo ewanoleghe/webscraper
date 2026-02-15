@@ -92,22 +92,48 @@ function helptext {
 }
 
 function launching_redis {
-    conf_dir="${AIL_HOME}/configs/"
-    redis_bin="${AIL_HOME}/redis/src/redis-server"
+    local conf_dir="${AIL_HOME}/configs/"
+    local redis_bin="${AIL_HOME}/redis/src/redis-server"
 
-    # Clean any existing Redis_AIL session first
-    screen -ls | grep Redis_AIL | awk '{print $1}' | xargs -I {} screen -S {} -X quit 2>/dev/null
-    sleep 0.5
+    # Safety check: make sure redis-server binary exists and is executable
+    if [ ! -x "$redis_bin" ]; then
+        echo -e "${RED}ERROR: redis-server binary not found or not executable: $redis_bin${DEFAULT}"
+        echo -e "${RED}       Check that Redis was built correctly in redis/src/${DEFAULT}"
+        return 1
+    fi
 
+    # Clean up any existing/leftover Redis_AIL screens
+    local old_screens=$(screen -ls | grep -o '[0-9]\+\.Redis_AIL' || true)
+    if [ -n "$old_screens" ]; then
+        echo -e "${YELLOW}Killing old Redis_AIL screen sessions...${DEFAULT}"
+        for s in $old_screens; do
+            screen -S "$s" -X quit 2>/dev/null || true
+        done
+        sleep 0.8
+    fi
+
+    # Create fresh detached session
     screen -dmS "Redis_AIL"
-    sleep 0.5
-    echo -e $GREEN"\t* Launching Redis servers"$DEFAULT
+    sleep 0.8   # give screen time to initialize
 
-    screen -S "Redis_AIL" -X screen -t "6379" bash -c "cd ${AIL_HOME} && exec ${redis_bin} ${conf_dir}6379.conf ; read x"
-    sleep 0.5
-    screen -S "Redis_AIL" -X screen -t "6380" bash -c "cd ${AIL_HOME} && exec ${redis_bin} ${conf_dir}6380.conf ; read x"
-    sleep 0.5
-    screen -S "Redis_AIL" -X screen -t "6381" bash -c "cd ${AIL_HOME} && exec ${redis_bin} ${conf_dir}6381.conf ; read x"
+    echo -e "${GREEN}\t* Launching Redis servers${DEFAULT}"
+
+    # Start each instance with explicit working directory and absolute paths
+    screen -S "Redis_AIL" -X screen -t "6379" bash -c "cd '${AIL_HOME}' && exec '${redis_bin}' '${conf_dir}6379.conf' ; echo '6379 exited with code $?' ; read x"
+    sleep 0.6
+    screen -S "Redis_AIL" -X screen -t "6380" bash -c "cd '${AIL_HOME}' && exec '${redis_bin}' '${conf_dir}6380.conf' ; echo '6380 exited with code $?' ; read x"
+    sleep 0.6
+    screen -S "Redis_AIL" -X screen -t "6381" bash -c "cd '${AIL_HOME}' && exec '${redis_bin}' '${conf_dir}6381.conf' ; echo '6381 exited with code $?' ; read x"
+
+    echo -e "${YELLOW}\t* Redis launch commands sent. Checking status in 5 seconds...${DEFAULT}"
+    sleep 5
+
+    # Quick status check
+    if screen -ls | grep -q "Redis_AIL"; then
+        echo -e "${GREEN}\t* Redis_AIL screen session is running${DEFAULT}"
+    else
+        echo -e "${RED}\t* ERROR: Redis_AIL screen session failed to start${DEFAULT}"
+    fi
 }
 
 function launching_ardb {
