@@ -95,15 +95,19 @@ function launching_redis {
     conf_dir="${AIL_HOME}/configs/"
     redis_bin="${AIL_HOME}/redis/src/redis-server"
 
+    # Clean any existing Redis_AIL session first
+    screen -ls | grep Redis_AIL | awk '{print $1}' | xargs -I {} screen -S {} -X quit 2>/dev/null
+    sleep 0.5
+
     screen -dmS "Redis_AIL"
     sleep 0.5
     echo -e $GREEN"\t* Launching Redis servers"$DEFAULT
 
-    screen -S "Redis_AIL" -X screen -t "6379" bash -c "${redis_bin} ${conf_dir}6379.conf ; read x"
+    screen -S "Redis_AIL" -X screen -t "6379" bash -c "cd ${AIL_HOME} && exec ${redis_bin} ${conf_dir}6379.conf ; read x"
     sleep 0.5
-    screen -S "Redis_AIL" -X screen -t "6380" bash -c "${redis_bin} ${conf_dir}6380.conf ; read x"
+    screen -S "Redis_AIL" -X screen -t "6380" bash -c "cd ${AIL_HOME} && exec ${redis_bin} ${conf_dir}6380.conf ; read x"
     sleep 0.5
-    screen -S "Redis_AIL" -X screen -t "6381" bash -c "${redis_bin} ${conf_dir}6381.conf ; read x"
+    screen -S "Redis_AIL" -X screen -t "6381" bash -c "cd ${AIL_HOME} && exec ${redis_bin} ${conf_dir}6381.conf ; read x"
 }
 
 function launching_ardb {
