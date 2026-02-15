@@ -19,7 +19,7 @@ websockets>9.0
 # Hashlib
 crcmod
 mmh3>2.5
-ssdeep>3.3
+# ssdeep>3.3
 xxhash>3.1.0
 
 # ZMQ
@@ -61,10 +61,10 @@ asciimatics>=1.11.0
 psutil>=5.7.0
 
 colorama>=0.4.4
-python-Levenshtein>=0.12.2
+python-Levenshtein>=0.12.2,<2.0.0
 
 # DomainClassifier
-pybgpranking
+# pybgpranking
 DomainClassifier
 
 # Indexer

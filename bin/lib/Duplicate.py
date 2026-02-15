@@ -2,7 +2,7 @@
 # -*-coding:UTF-8 -*
 
 import os
-import ssdeep
+import pydeep2
 import sys
 import time
 import tlsh
@@ -17,10 +17,9 @@ from lib.ConfigLoader import ConfigLoader
 
 config_loader = ConfigLoader()
 r_serv_db = config_loader.get_db_conn("Kvrocks_Duplicates")
-MIN_ITEM_SIZE = float(config_loader.get_config_str('Modules_Duplicates', 'min_paste_size')) # # TODO: RENAME ME
+MIN_ITEM_SIZE = float(config_loader.get_config_str('Modules_Duplicates', 'min_paste_size'))  # TODO: RENAME ME
 config_loader = None
 
-#
 #
 # Hash != Duplicates => New correlation HASH => check if same hash if duplicate == 100
 #
@@ -30,17 +29,17 @@ config_loader = None
 #                     -> compute/get(if exist we have a correlation) hash -> get correlation same hash
 #
 #
-# Duplicates between differents objects ?????
+# Duplicates between differents objects ????? 
 #         Diff Decoded -> Item => Diff Item decoded - Item
 #
 # Duplicates domains != Duplicates items
 
 
 def get_ssdeep_hash(content):
-    return ssdeep.hash(content)
+    return pydeep2.hash(content)
 
 def get_ssdeep_similarity(obj_hash, other_hash):
-    return ssdeep.compare(obj_hash, other_hash)
+    return pydeep2.compare(obj_hash, other_hash)
 
 def get_tlsh_hash(content):
     return tlsh.hash(content)
@@ -98,11 +97,10 @@ def add_duplicate(algo, hash_, similarity, obj_type, subtype, obj_id, date_ymont
     add_obj_duplicate(algo, similarity, obj_type, subtype, obj_id, obj2_id)
     add_obj_duplicate(algo, similarity, obj_type, subtype, obj2_id, obj_id)
 
-# TODO
+# TODO: implement deletion functions
 def delete_obj_duplicates():
     pass
 
-# TODO
 def delete_obj_duplicate():
     pass
 
@@ -118,4 +116,3 @@ def get_last_x_month_dates(nb_months):
 if __name__ == '__main__':
     res = get_last_x_month_dates(7)
     print(res)
-

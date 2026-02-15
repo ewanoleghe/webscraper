@@ -3,7 +3,7 @@
 import hashlib
 import crcmod
 import mmh3
-import ssdeep
+import pydeep2  # Replacing ssdeep with pydeep2
 import tlsh
 
 
@@ -23,21 +23,21 @@ class Hash(object):
 
     def Calculate(self, string):
         if self.name == "md5":
-            hash = hashlib.md5(string).hexdigest()
+            hash = hashlib.md5(string.encode('utf-8')).hexdigest()
 
         elif self.name == "sha1":
-            hash = hashlib.sha1(string).hexdigest()
+            hash = hashlib.sha1(string.encode('utf-8')).hexdigest()
 
         elif self.name == "crc":
             crc32 = crcmod.Crc(0x104c11db7, initCrc=0, xorOut=0xFFFFFFFF)
-            crc32.update(string)
+            crc32.update(string.encode('utf-8'))
             hash = crc32.hexdigest()
 
         elif self.name == "murmur":
             hash = mmh3.hash(string)
 
         elif self.name == "ssdeep":
-            hash = ssdeep.hash(string)
+            hash = pydeep2.hash(string)  # Use pydeep2 for ssdeep
 
         elif self.name == "tlsh":
             hash = tlsh.hash(string)

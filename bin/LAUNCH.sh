@@ -1,4 +1,5 @@
 #!/bin/bash
+#!/usr/bin/env python3
 
 GREEN="\\033[1;32m"
 DEFAULT="\\033[0;39m"
