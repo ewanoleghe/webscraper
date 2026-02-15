@@ -16,6 +16,14 @@ export AIL_HOME="${DIR}"
 
 cd ${AIL_HOME}
 
+# Define required AIL environment variables (missing in current script)
+export AIL_BIN="${AIL_HOME}bin"
+export AIL_REDIS="${AIL_HOME}redis/src"      # This is the critical one – points to your local redis-server/redis-cli
+export AIL_KVROCKS="${AIL_HOME}kvrocks/build"  # Adjust if kvrocks binary is in a different location (e.g. /usr/bin/kvrocks → export AIL_KVROCKS=/usr/bin)
+export AIL_FLASK="${AIL_HOME}var/www"          # For Flask-related scripts if needed later
+# Optional: if older updates complain about ARDB
+# export AIL_ARDB="${AIL_HOME}ardb/src"        # or /tmp if ARDB is deprecated
+
 if [ -e "${DIR}/AILENV/bin/python" ]; then
     ENV_PY="${DIR}/AILENV/bin/python"
     export AIL_VENV=${AIL_HOME}/AILENV/
@@ -25,12 +33,12 @@ else
     exit 1
 fi
 
-export PATH=$AIL_VENV/bin:$PATH
-export PATH=$AIL_HOME:$PATH
-export PATH=$AIL_REDIS:$PATH
-export PATH=$AIL_KVROCKS:$PATH
-export PATH=$AIL_BIN:$PATH
-export PATH=$AIL_FLASK:$PATH
+export PATH="${AIL_VENV}/bin:${PATH}"
+export PATH="${AIL_HOME}:${PATH}"
+export PATH="${AIL_REDIS}:${PATH}"
+export PATH="${AIL_KVROCKS}:${PATH}"
+export PATH="${AIL_BIN}:${PATH}"
+export PATH="${AIL_FLASK}:${PATH}"
 
 function check_screens {
     isredis=`screen -ls | egrep '[0-9]+.Redis_AIL' | cut -d. -f1`
