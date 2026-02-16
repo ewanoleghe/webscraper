@@ -2,7 +2,7 @@
 # -*-coding:UTF-8 -*
 
 import os
-import pydeep2
+import pydeep
 import sys
 import time
 import tlsh
@@ -36,10 +36,10 @@ config_loader = None
 
 
 def get_ssdeep_hash(content):
-    return pydeep2.hash(content)
+    return pydeep.hash(content)
 
 def get_ssdeep_similarity(obj_hash, other_hash):
-    return pydeep2.compare(obj_hash, other_hash)
+    return pydeep.compare(obj_hash, other_hash)
 
 def get_tlsh_hash(content):
     return tlsh.hash(content)

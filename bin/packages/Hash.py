@@ -3,7 +3,7 @@
 import hashlib
 import crcmod
 import mmh3
-import pydeep2  # Replacing ssdeep with pydeep2
+import pydeep  # Replacing ssdeep with pydeep
 import tlsh
 
 
@@ -37,7 +37,7 @@ class Hash(object):
             hash = mmh3.hash(string)
 
         elif self.name == "ssdeep":
-            hash = pydeep2.hash(string)  # Use pydeep2 for ssdeep
+            hash = pydeep.hash(string)  # Use pydeep for ssdeep
 
         elif self.name == "tlsh":
             hash = tlsh.hash(string)
